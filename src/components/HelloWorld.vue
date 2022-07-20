@@ -1,4 +1,118 @@
 <script setup>
+const transactions = document.querySelector("#enter_transaction")
+const transactionsSavings = document.querySelector("enter_transaction_savings");
+const transactionType = document.querySelector("#transaction_type") 
+const transactionTypeSavings = document.querySelector("#transaction_type_savings");
+const transAmount = document.querySelector("#transaction_amount");
+const transAmountSavings = document.querySelector("#transaction_amount_savings");
+const transDescription = document.querySelector("#transaction_description");
+const table = document.querySelector("#trans_table");
+const tableSavings =  document.querySelector("#trans_table_savings");
+const desc = document.querySelector("#desc");
+const checkingStartingBalance = document.querySelector("#checking_balance");
+const savingsStartingBalance = document.querySelector("#savings_balance");
+const balanceInfo = document.querySelector("#balance_info");
+
+// Checking Account
+let checkingAccount = {
+  name: "checking",
+  balance: 0.00,
+  allTransactions: [],
+  deposit: function (amount) {
+    this.balance += amount;
+    this.allTransactions.push({
+      type: "deposit",
+      amount: amount,
+    })
+  },
+  withdraw: function (amount) {
+    this.balance -= amount;
+    this.allTransactions.push({
+      type: "withdrawal",
+      amount: amount,
+    })
+  },
+  debit: function (amount, purpose) {
+    this.balance -= amount;
+    this.allTransactions.push({
+      type: "debit",
+      amount: amount,
+      purpose: purpose,
+    });
+  },
+  transfer: function (amount, transferAccount) {
+    this.balance -= amount;
+    transferAccount.allTransactions.push({
+      type: "transfer",
+      amount: amount,
+      purpose: "transfer",
+    }),
+    this.allTransactions.push({
+      type: "transfer",
+      amount: amount,
+      purpose: "transfer",
+    })
+  }
+}
+
+// Savings Account
+let savingsAccount = {
+  name: "savings",
+  balance: 0,
+  allTransactions: [],
+  deposit: function (amount) {
+    this.balance += amount;
+    this.allTransactions.push({
+      type: "deposit",
+      amount: amount,
+    })
+  },
+  withdraw: function (amount) {
+    this.balance -= amount;
+    this.allTransactions.push({
+      type: "withdrawal",
+      amount: amount,
+    })
+  },
+  debit: function (amount, purpose) {
+    this.balance -= amount;
+    this.allTransactions.push({
+      type: "withdrawal",
+      amount: amount,
+    });
+  },
+  transfer: function (amount, transferAccount) {
+    this.balance -= amount;
+    transferAccount.balance += amount;
+    transferAccount.allTransactions.push({
+      type: "transfer",
+      amount: amount,
+      purpose: "purpose",
+    });
+  },
+  transfer: function (amount, transferAccount) {
+    this.balance -= amount;
+    transferAccount.balance += amount;
+    transferAccount.allTransactions.push({
+      type: "transfer",
+      amount: amount,
+      purpose: "transfer",
+    }),
+    this.allTransactions.push({
+      type: "transfer",
+      amount: amount,
+      purpose: "transfer"
+    })
+  }
+}
+
+// This function needs to be called to hide info till we need it
+function hideStartingInfo() {
+  // Hides savings/checking info and transaction info.
+  hideToggle(checking_info);
+  hideToggle(savings_info);
+  hideToggle(transactions);
+}
 
 </script>
 
@@ -135,9 +249,36 @@ td, th {
 }
 
 th {
-  background-color: #c4c4c4;
+  background-color: #414141;
   border-top: none;
 }
 
+td:first-child, th:first-child {
+  border-left: none;
+}
+
+.trans_type {
+   background:#e5e5e5;
+   border: 1px solid #2b2b2b;
+   border-radius: 5px;
+   padding: 2px;
+   margin: 5px;
+}
+
+.submit_trans {
+  background: #1c1917;
+  color: #e5e5e5;
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+  width: 67px;
+}
+
+.transaction {
+  background: #F5F5F5;
+  border: 1px solid #414141;
+  border-radius: 5px;
+}
 
 </style>
