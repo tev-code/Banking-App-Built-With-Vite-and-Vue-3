@@ -114,6 +114,144 @@ function hideStartingInfo() {
   hideToggle(transactions);
 }
 
+function printTable(tableId, account, transferMessage) {
+  // This will print itmes to table as they are entered
+  let newRow = tableId.insertRow(-1);5
+  let newCell1 = newRow.insertCell(0);
+  let newCell2 = newRow.insertCell(1);
+  let newCell3 = newRow.insertCell(2);
+  let newCell4 = newRow.insertCell(3);
+  newCell1.innerHTML = account.allTransactions[account.allTransactions.length - 1].type;
+  newCell3.innerHTML = account.allTransactions[account.allTransactions.length - 1].amount;
+  newCell4.innerHTML = account.balance;
+  if (account.allTransactions[account.allTransactions.length - 1].purpose != undefined) {
+    if(account.allTransactions[account.allTransactions.length - 1].purpose === "transfer") {
+    newCell2.innerHTML = transferMessage;
+  } else {
+    newCell2.innerHTML = account.allTransactions[account.allTransactions.length - 1].purpose;
+  } 
+  } else {
+  newCell2.innerHTML = "";
+}
+}
+
+// Checks which transaction button is selected and exucutes correct function.
+function mainBankChecking() {
+  if(transactionType.value === "Debit") {
+    runDebitChecking();
+    transDescription.value = "";
+    transAmount.value = "";
+  } else if (transactionType.value === "Deposit") {
+    runDepositChecking();
+    transAmount.value = "";
+  } else if (transactionType.value === "Withdraw") {
+    runwithdrawChecking();
+    transAmount.value = "";
+  } else if (transactionType.value === "Transfer") {
+    runTransferChecking();
+    transAmount.value = "";
+  }
+}
+
+
+    // Checks which transaction button is selected and executes correct function.
+    function mainBankSavings() {
+      if (transactionTypeSavings.value === "Deposit") {
+        runDepositSavings();
+        transAmountSavings.value = "";
+      } else if (transactionTypeSavings.value === "Withdraw") {
+        runWithdrawSavings();
+        transAmountSavings.value = "";
+      } else if (transactionTypeSavings.value === "Transfer") {
+        runTransferSavings();
+        transAmountSavings.value = "";
+      }
+    }
+
+    // Checking Debit
+    function runDebitChecking() {
+      let howMuch = Number.parseFloat(transAmount.value);
+      let forWhat = transDescription.value;
+      if (isNaN(howMuch)) {
+        alert("Enter Amount");
+      } else if (howMuch <= 0) {
+        alert("Enter positive number.");
+      } else {
+        if (checkingAccount.balance >= howMuch) {
+          checkingAccount.debit(howMuch, forWhat);
+          displayAccountBalances();
+          printTable(table, checkingAccount);
+        } else {
+          alert("Not enough funds for transaction")
+        }
+      }
+    }
+
+    // Checking Deposit
+    function runDepositChecking() {
+      let howMuch = Number.parseFloat(transAmount.value);
+      if (isNaN(howMuch)) {
+        alert("Enter Amount");
+      } else if (howMuch <= 0) {
+        alert("Enter positive number.")
+      } else {
+        checkingAccount.deposit(howMuch);
+        displayAccountBalances();
+        printTable(table, checkingAccount);
+      }
+    }
+
+    // Savings Deposit
+    function runDepositSavings() {
+      let howMuch = Number.parseFloat(transAmountSavings.value);
+      if (isNaN(howMuch)) {
+        alert("Enter Amount");
+      } else if (howMuch <= 0) {
+        alert("Enter positive number.")
+      } else {
+        savingsAccount.deposit(howMuch);
+        displayAccountBalances();
+        printTable(tableSavings, savingsAccount);
+      }
+    }
+
+    // Checking Withdrawal
+    function runwithdrawChecking() {
+      let howMuch = Number.parseFloat(transAmountAmount.value);
+      if (isNaN(howMuch)) {
+        alert("Enter Amount");
+      } else if (howMuch <= 0) {
+        alert("Enter positive number.");
+      } else {
+        if (checkingAccount.balance >= howMuch) {
+          checkingAccount.withdraw(howMuch);
+          displayAccountBalances();
+          printTable(table, checkingAccount);
+        } else {
+          alert("Not enought funds for transaction")
+        }
+      }
+    }
+
+    // Savings Withdrawal
+    function runwithdrawSavings() {
+      let howMuch = Number.parseFloat(transAmountSavings.value);
+      if (isNaN(howMuch)) {
+        alert("Enter Amount");
+      } else if (howMuch <= 0) {
+        alert("Enter positive number.");
+      } else {
+        if (savingsAccount.balance >= howMuch) {
+          savingsAccount.withdraw(howMuch);
+          displayAccountBalances();
+          printTable(tableSavings, savingsAccount);
+        } else {
+          alert("Not enough funds for transaction.")
+        }
+      }
+    }
+    
+
 </script>
 
 <template>
