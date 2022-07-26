@@ -250,7 +250,116 @@ function mainBankChecking() {
         }
       }
     }
+
+    // Transfer Checking to Savings
+    function runTransferChecking() {
+      let howMuch = Number.parseFloat(transAmount.value);
+      if (isNaN(howMuch)) {
+        alert("Enter positive number.");
+      } else {
+        if (checkingAccount.balance >= howMuch) {
+          checkingAccount.transfer(howMuch, savingsAccount);
+          displayAccountBalances();
+          printTable(table, checkingAccount, "Transfer to Savings");
+          printTable(tableSavings, savingsAccount, "Transfer from Checkings");
+        } else {
+          alert("Not enough funds for transaction")
+        }
+      }
+    }
+
+    // Transfer Savings to Checking
+    function runTransferSavings() {
+      let howMuch = Number.parseFloat(transAmountSavings.value);
+      if (isNaN(howMuch)) {
+        alert("Enter Amount");
+      } else if (howMuch <= 0) {
+        alert("Enter positive number.");
+      } else {
+        if (savingsAccount.balance >= howMuch) {
+          savingsAccount.transfer(howMuch, checkingAccount);
+          displayAccountBalances();
+          printTable(tableSavings, savingsAccount, "Transfer to checking");
+          printTable(table, checkingAccount, "Transfer from savings");
+      
+        } else {
+          alert("Not enough funds for transaction.")
+        }
+      }
+    }
+
+    // Displays current balance of both accounts
+    function displayAccountBalances () {
+      document.querySelector("#current_checking_balance").textContent = "Current Balance: $" +  checkingAccount.balance;
+      document.querySelector("#current_savings_balance").textContent = "Current Balance: $" +   savingsAccount.balance;
+    }
+
+    // Get starting balance of both accounts
+    function displayAccountBalances () {
+     let checkStart = parseFloat(checkingsStartingBalance.value);
+     let saveStart = parseFloat(savingsStartingBalance.value);
+     let checkFixed = parseFloat(checkStart.toFixed(2));
+     let saveFixed = parseFloat(saveStart.toFixed(2));
+     if (isNaN(checkStart) || isNaN(saveStart)) {
+      alert("Enter starting balance.")
+     } else {
+      checkingAccount.balance = checkFixed;
+      savingsAccount.balance = saveFixed;
+      clearBox("balance_info");
+      displayAccountBalances();
+      hideToggle(checking_info);
+      hideToggle(savings_info);
+      hideToggle(transactions);
+      hideToggle(balanceInfo);
+     }
+    }
+
+    // Clears element html
+    function clearBox(elementID) {
+      document.getElementById(elementID).innerHTML ="";
+    }
+
+    // Checks transaction type. If debited it then shows description box. If not it hides it
+    function checkTransType() {
+      if (transactionType.value === "Debit") {
+        desc.getElementsByClassName.display = "block";
+        transDescription.value = ""; 
+      } else if (transactionType.value === "Deposit") {
+        desc.style.display = "none";
+      } else if (transactionType.value === "Withdraw") {
+        desc.style.display = "none";
+      } else if (transactionType.value === "Transfer") {
+        desc.style.display = "none";
+      }
+    }
+
+    // Toggle to hide items
+    function hideToggle(itemToHide) {
+      if (itemToHide.style.display === "none") {
+        itemToHide.style.display = "block";
+      } else {
+        itemToHide.style.display = "none";
+      }
+    }
+
+    // Limits input boxes to .00 decimal places. Use this function oninput for input boxes in html
+     function validate(event) {
+       let x = this.value;
+       this.value = (x.indexOf(".") >= 0) ? (x.substr(0, x.indexOf(".")) + x.substr(x.indexOf("."), 3)) : x;
+       }
     
+      checkingStartingBalance.addEventListener("input", validate);
+      savingsStartingBalance.addEventListener("input", validate);
+      transAmount.addEventListener("input", validate);
+      transAmountSavings.addEventListener("input", validate);
+      document.querySelector("#submit_balance").addEventListener("click", getStartingBalance);
+      document.querySelector("#submit_transaction").addEventListener("click", () => {
+      mainBankChecking();
+     });
+      document.querySelector("#submit_transaction_savings").addEventListener("click", () => {
+      mainBankSavings();
+      });
+      transactionType.addEventListener("click", checkTransType);
 
 </script>
 
